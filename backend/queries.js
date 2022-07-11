@@ -17,7 +17,7 @@ function selectOne(connection, username, callback) {
   })
 }
 
-function insertOne(connection, {username, password, email }, callback) {
+function insertOne(connection, { username, password, email }, callback) {
   let insertQuery = "INSERT INTO users (username,password,email) SELECT * FROM (SELECT ?,?,?) AS tmp WHERE NOT EXISTS (SELECT username,email FROM users WHERE username = ? OR email = ?);"
   let query = mysql.format(insertQuery, [username, password, email, username, email])
   connection.query(query, (err, result) => {
@@ -36,11 +36,10 @@ function deleteOne(connection, username, callback) {
 }
 
 function updateOne(connection, [body, username], callback) {
-  const {uptUsername, uptPassword, uptEmail} = body
   let updateQuery = "UPDATE users SET username=?, password=?, email=? WHERE username=?;"
-  let query = mysql.format(updateQuery, [uptUsername, uptPassword, uptEmail, username])
+  let query = mysql.format(updateQuery, [body.username, body.password, body.email, username])
   connection.query(query, (err, result) => {
-    if (err) { throw err}
+    if (err) { throw err }
     callback(result)
   })
 }
