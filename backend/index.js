@@ -1,13 +1,29 @@
 import express from 'express'
 import mysql from 'mysql'
 import dotenv from 'dotenv'
+import { engine } from 'express-handlebars'
 
-import { selectAll, selectOne, insertOne, deleteOne, updateOne } from './queries.js'
-
-dotenv.config()
+import { 
+  selectAll, 
+  selectOne, 
+  insertOne, 
+  deleteOne, 
+  updateOne 
+} from './queries.js'
 
 const app = express()
+const PORT = 3000
+
+dotenv.config()
 app.use(express.json())
+
+app.engine('.hbs', engine({
+  extname: '.hbs',
+  defaultLayout: "",
+  layoutsDir: ""
+}))
+app.set('view engine', '.hbs')
+app.set("views", "./views/")
 
 const connection = mysql.createConnection({
   "host": "localhost",
@@ -22,8 +38,8 @@ connection.connect((err) => {
 })
 
 app.get('/', (req, res) => {
-  let html = "<h1>API</h1><nav><a href='/api/users'>/api/users</a><a href='/api/users/steven'>/api/users/:username</a></nav>"
-  res.send(html)
+  // let html = "<h1>API</h1><nav><a href='/api/users'>/api/users</a><a href='/api/users/steven'>/api/users/:username</a></nav>"
+  res.render('main')
 })
 
 app.get('/api/users', (req, res) => {
@@ -72,7 +88,6 @@ app.delete('/api/users/:username', (req, res) => {
   })
 })
 
-// UPDATE
 app.put('/api/users/:username', (req, res) => {
   const { body } = req
   const { username } = req.params
@@ -91,7 +106,7 @@ app.get('/*', (req, res) => {
   res.send('<div style="display: flex; align-items: center; justify-content: center; height: 100%;"><span style="font-size: 3.5rem">404 - Not Found</span></div>')
 })
 
-app.listen(3000, () => {
-  console.log('[+] SERVER IN RUNNING IN: http://localhost:3000/')
+app.listen(PORT, () => {
+  console.log(`[+] SERVER IN RUNNING IN: http://localhost:${PORT}/`)
 })
 
