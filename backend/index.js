@@ -26,10 +26,10 @@ app.set('view engine', '.hbs')
 app.set("views", "./views/")
 
 const connection = mysql.createConnection({
-  "host": "localhost",
-  "user": process.env.USER,
-  "password": process.env.PSWD,
-  "database": process.env.DATABASE
+  host: "localhost",
+  user: process.env.USER,
+  password: process.env.PSWD,
+  database: process.env.DATABASE
 })
 
 connection.connect((err) => {
@@ -38,7 +38,6 @@ connection.connect((err) => {
 })
 
 app.get('/', (req, res) => {
-  // let html = "<h1>API</h1><nav><a href='/api/users'>/api/users</a><a href='/api/users/steven'>/api/users/:username</a></nav>"
   res.render('main')
 })
 
@@ -103,7 +102,8 @@ app.put('/api/users/:username', (req, res) => {
 })
 
 app.get('/*', (req, res) => {
-  res.send('<div style="display: flex; align-items: center; justify-content: center; height: 100%;"><span style="font-size: 3.5rem">404 - Not Found</span></div>')
+  // res.send('<div style="display: flex; align-items: center; justify-content: center; height: 100%;"><span style="font-size: 3.5rem">404 - Not Found</span></div>')
+  res.render('404')
 })
 
 app.listen(PORT, () => {
